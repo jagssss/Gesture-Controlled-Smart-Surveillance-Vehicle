@@ -1,0 +1,47 @@
+Code for receiving and moving servo Motors
+#include <Arduino.h> #include <ESP8266WiFi.h> #include <espnow.h> #include <Servo.h>
+int pos =
+0; int
+pos1; int
+f=0;
+Servo servo_1;
+Servo servo_4;
+typedef struct message {
+int laser;
+int cased;
+} message;
+message myMessage;
+void onDataReceiver(uint8_t * mac, uint8_t *incomingData, uint8_t len) { Serial.println("Message received.");
+// We don't use mac to verify the sender
+// Let us transform the incomingData into our message structure memcpy(&myMessage, incomingData, sizeof(myMessage));
+/*Serial.print("Red:"); Serial.println(myMessage.red); Serial.print("Green:"); Serial.println(myMessage.green); Serial.print("Blue:"); Serial.println(myMessage.blue);*/ if(myMessage.cased==1&&f==0){ f=1;
+for (pos1=0; pos <= 80; pos +=1) { servo_4.write(pos1);
+// wait 15 ms for servo to reach the position delay(15); // Wait for 15 millisecond(s)
+}
+}
+if (myMessage.laser == 3&&f==1) {
+for (; pos <= 180; pos += 1) { servo_1.write(pos); if(myMessage.laser == 2){
+break; }
+// wait 15 ms for servo to reach the position
+delay(15); // Wait for 15 millisecond(s) }
+}
+else if (myMessage.laser == 2&&f==1) { for (; pos >= 0; pos -=1) { servo_1.write(pos);
+if(myMessage.laser == 3){
+break; }
+// wait 15 ms for servo to reach the position delay(15); // Wait for 15 millisecond(s)
+} }
+}
+void setup() { Serial.begin(115200); servo_1.attach(1, 500, 2500);
+servo_4.attach(4, 500, 2500);
+WiFi.disconnect();
+ESP.eraseConfig();
+// Wifi STA Mode WiFi.mode(WIFI_STA);
+// Get Mac Add
+Serial.print("Mac Address: "); Serial.print(WiFi.macAddress()); Serial.println("\nESP-Now Receiver");
+// Initializing the ESP-NOW if (esp_now_init() != 0) {
+Serial.println("Problem during ESP-NOW init");
+return; }
+//esp_now_set_self_role(ESP_NOW_ROLE_SLAVE); // We can register the receiver callback function esp_now_register_recv_cb(onDataReceiver);
+}
+void loop() {
+// put your main code here, to run repeatedly: }
