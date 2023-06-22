@@ -1,0 +1,16 @@
+Code for sending Whatsapp message:
+
+import os
+from twilio.rest import Client
+# Find your Account SID and Auth Token at twilio.com/console # and set the environment variables. See http://twil.io/secure def whatsapp():
+account_sid = "AC3d54c604bfd9b3671b24439b8933c013" auth_token = "f7e67cde3b94cf752c51a57628573752" client = Client(account_sid, auth_token)
+message = client.messages.create(
+body='Enemy ahead For live stream check here
+https://grabify.link/N2VICE', from_='whatsapp:+14155238886',
+to='whatsapp:+918168404341' )
+print(message.sid) def Ready():
+account_sid = "AC3d54c604bfd9b3671b24439b8933c013" auth_token = "f7e67cde3b94cf752c51a57628573752" client = Client(account_sid, auth_token)
+message = client.messages.create(
+body='Ready for Surveillance', from_='whatsapp:+14155238886', to='whatsapp:+918168404341'
+)
+print(message.sid) Ready()
